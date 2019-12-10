@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">CuteBoard</string>
+    <string name="post_img">Post image.</string>
+    <string name="title">Title</string>
+    <string name="date">Date</string>
+    <string name="welcome">Welcome to the CuteBoard!</string>
+    <string name="rss_default">Enter RSS feed URL.</string>
+    <string name="start">Get started!</string>
 </resources>
