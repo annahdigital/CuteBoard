@@ -2,10 +2,10 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_space"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
-
 
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -14,14 +14,21 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="20dp"
-        app:backgroundTint="@color/colorPrimaryDark"
         android:layout_marginEnd="15dp"
         android:layout_marginBottom="10dp"
-        android:src="@mipmap/add" />
+        android:src="@mipmap/add"
+        app:backgroundTint="@color/colorPrimaryDark" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/post_view"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_gravity="center">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/post_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
