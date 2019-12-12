@@ -9,14 +9,14 @@
 
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/add_post"
+        android:id="@+id/settings_rss"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="20dp"
         android:layout_marginEnd="15dp"
         android:layout_marginBottom="10dp"
-        android:src="@mipmap/add"
+        android:src="@mipmap/setting"
         app:backgroundTint="@color/colorPrimaryDark" />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
