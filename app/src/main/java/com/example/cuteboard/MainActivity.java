@@ -1,13 +1,17 @@
 package com.example.cuteboard;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
 import android.view.LayoutInflater;
 import android.view.Gravity;
 import android.view.ViewGroup.LayoutParams;
@@ -16,7 +20,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.PopupWindow;
+import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -27,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private PopupWindow mPopupWindow;
     private Context mContext;
     private SharedPreferences sharedPref;
+    private BroadcastReceiver mNetworkReceiver;
 
     private String RSS;
     public static final String APP_RSS = "RSS";
@@ -36,7 +43,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("");
+
         sharedPref = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        mNetworkReceiver = new NetworkStateReceiver();
+        registerReceiver(mNetworkReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
 
         if (!sharedPref.contains(APP_RSS)) {
             showPopUp();
@@ -68,10 +81,11 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    // dialog for entering a URL link
    private void showPopUp()
    {
-       final FloatingActionButton addButton = this.findViewById(R.id.settings_rss);
-       addButton.setVisibility(View.GONE);
+       final FloatingActionButton settingsButton = this.findViewById(R.id.settings_rss);
+       settingsButton.setVisibility(View.GONE);
        mContext = getApplicationContext();
        LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(LAYOUT_INFLATER_SERVICE);
        View customView = inflater.inflate(R.layout.start_page, null);
@@ -84,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
        mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
            @Override
            public void onDismiss() {
-               addButton.setVisibility(View.VISIBLE);
+               settingsButton.setVisibility(View.VISIBLE);
            }
        });
        mPopupWindow.setElevation(5.0f);
@@ -110,5 +124,20 @@ public class MainActivity extends AppCompatActivity {
                mPopupWindow.showAtLocation(findViewById(R.id.main_space), Gravity.CENTER,0,0);
            }
        });
+   }
+
+   public void networkStateChanged(String status)
+   {
+           if (status.equals(getResources().getString(R.string.wifi)) || status.equals(getResources().getString(R.string.mobile_data))) {
+               TextView toolbarTitle = this.findViewById(R.id.label);
+               toolbarTitle.setText(getResources().getString(R.string.app_name));
+               ImageView iconToolbar = this.findViewById(R.id.icon_toolbar);
+               iconToolbar.setImageResource(R.drawable.kitty);
+           } else {
+               TextView toolbarTitle = this.findViewById(R.id.label);
+               toolbarTitle.setText(getResources().getString(R.string.no_internet_short));
+               ImageView iconToolbar = this.findViewById(R.id.icon_toolbar);
+               iconToolbar.setImageResource(R.mipmap.kitty_disappointed);
+           }
    }
 }

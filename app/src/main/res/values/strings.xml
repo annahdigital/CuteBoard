@@ -6,4 +6,8 @@
     <string name="welcome">Welcome to the CuteBoard!</string>
     <string name="rss_default">Enter RSS feed URL.</string>
     <string name="start">Get started!</string>
+    <string name="wifi">Wifi enabled</string>
+    <string name="mobile_data">Mobile data enabled</string>
+    <string name="no_internet">Not connected to Internet! :c </string>
+    <string name="no_internet_short">No Internet! :c</string>
 </resources>
