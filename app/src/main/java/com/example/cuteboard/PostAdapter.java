@@ -62,6 +62,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.RSSPostViewHol
         holder.postTitleView.setText(rssFeedModel.getTitle());
         holder.postDateView.setText(rssFeedModel.getDate());
         holder.postContentView.setText(rssFeedModel.getContent());
+        holder.postImageView.setImageResource(R.mipmap.kitty);
         // + ADD IMAGE
     }
 
@@ -69,67 +70,4 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.RSSPostViewHol
     public int getItemCount() {
         return posts.size();
     }
-
-    /*public PostAdapter(Context context, int textViewResourceId,
-                       ArrayList<RSSPost> postList) {
-        super(context, textViewResourceId, postList);
-        myContext = (Activity) context;
-        posts = postList;
-    }
-
-    public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder viewHolder;
-
-        if (convertView == null) {
-            LayoutInflater inflater = myContext.getLayoutInflater();
-            convertView = inflater.inflate(R.layout.post, null);
-
-            viewHolder = new ViewHolder();
-            viewHolder.postImageView = convertView.findViewById(R.id.postImage);
-            viewHolder.postTitleView = convertView.findViewById(R.id.postTitleLabel);
-            viewHolder.postDateView =  convertView.findViewById(R.id.postDateLabel);
-
-            convertView.setTag(viewHolder);
-        } else {
-            viewHolder = (ViewHolder) convertView.getTag();
-        }
-
-        RSSPost post = posts.get(position);
-
-        viewHolder.postImageView.setImageResource(R.drawable.idea);
-
-        if (post.getImage() != null) {
-            viewHolder.postURL = post.getImage();
-            new LoadImageTask().execute(viewHolder);
-        }
-
-        viewHolder.postTitleView.setText(post.getTitle());
-        viewHolder.postDateView.setText(post.getDate());
-
-        return convertView;
-    }
-
-    private class LoadImageTask extends AsyncTask<ViewHolder, Void, ViewHolder> {
-
-        @Override
-        protected ViewHolder doInBackground(ViewHolder... params) {
-            ViewHolder viewHolder = params[0];
-            try {
-                URL imageURL = new URL(viewHolder.postURL);
-                viewHolder.bitmapImage = BitmapFactory.decodeStream(imageURL.openStream());
-            } catch (IOException e) {
-                Log.e("error", "Can't load image! :< ");
-                viewHolder.postImageView = null;
-            }
-
-            return viewHolder;
-        }
-
-        @Override
-        protected void onPostExecute(ViewHolder result) {
-            if (result.bitmapImage != null) {
-                result.postImageView.setImageBitmap(result.bitmapImage);
-            }
-        }
-    }*/
 }

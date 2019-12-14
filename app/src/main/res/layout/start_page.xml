@@ -10,8 +10,9 @@
         android:layout_width="180dp"
         android:layout_height="180dp"
         android:layout_below="@id/welcome"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="false"
+        android:layout_alignParentEnd="false"
+        android:layout_centerInParent="true"
         android:layout_gravity="center"
         android:layout_marginBottom="10dp"
         android:contentDescription="@string/app_name"
@@ -33,11 +34,12 @@
 
     <TextView
         android:id="@+id/rss_url"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/catImage"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentStart="true"
+        android:layout_alignParentStart="false"
+        android:layout_alignParentEnd="false"
+        android:layout_centerInParent="true"
         android:gravity="center_horizontal"
         android:text="@string/rss_default"
         android:textAppearance="?android:attr/textAppearanceLarge" />
@@ -60,10 +62,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/input_rss"
-        android:layout_centerInParent="false"
-        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="true"
         android:padding="15dp"
         android:text="@string/start" />
+
+    <Button
+        android:id="@+id/random_link"
+        style="@style/MainButtonStyle"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_below="@id/input_rss"
+        android:layout_toEndOf="@id/rss_url"
+        android:text="@string/random_link" />
 
 
 </RelativeLayout>

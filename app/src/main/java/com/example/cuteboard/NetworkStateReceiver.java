@@ -16,6 +16,7 @@ public class NetworkStateReceiver extends BroadcastReceiver {
         String status = NetworkStateReader.getConnectivityStatusString(context);
 
         ((MainActivity) context).networkStateChanged(status);
+
         Toast toast = Toast.makeText(context,
                 status,
                 Toast.LENGTH_LONG);

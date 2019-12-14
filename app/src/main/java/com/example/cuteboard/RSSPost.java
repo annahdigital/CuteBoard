@@ -18,6 +18,8 @@ public class RSSPost {
         this.Image = image;
     }
 
+    public RSSPost() {}
+
 
     public String getTitle() { return this.Title; }
 
@@ -35,8 +37,8 @@ public class RSSPost {
 
     public void setImage(String image) { this.Image = image; }
 
-    public String setLink() { return this.Link; }
+    public String getLink() { return this.Link; }
 
-    public void getLink(String link) { this.Link = link; }
+    public void setLink(String link) { this.Link = link; }
 
 }
