@@ -1,17 +1,19 @@
-package com.example.cuteboard;
+package com.example.cuteboard.Network;
 
 import android.net.ConnectivityManager;
 import android.content.Context;
 import android.net.NetworkInfo;
 
+import com.example.cuteboard.R;
+
 public class NetworkStateReader {
 
-    public static int TYPE_WIFI = 1;
-    public static int TYPE_MOBILE = 2;
-    public static int TYPE_NOT_CONNECTED = 0;
+    private static int TYPE_WIFI = 1;
+    private static int TYPE_MOBILE = 2;
+    private static int TYPE_NOT_CONNECTED = 0;
 
 
-    public static int getConnectivityStatus(Context context) {
+    private static int getConnectivityStatus(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();

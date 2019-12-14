@@ -1,11 +1,8 @@
-package com.example.cuteboard;
+package com.example.cuteboard.Tasks;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.StrictMode;
-import android.util.Log;
-import android.util.Xml;
 import android.view.Gravity;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -14,21 +11,21 @@ import android.widget.Toast;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.example.cuteboard.Adapters.PostAdapter;
+import com.example.cuteboard.Models.RSSPost;
+import com.example.cuteboard.R;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -87,9 +84,6 @@ public class RSSFeedControl extends AsyncTask<Void, Void, Boolean>
 
     private Document tryConnection(String address)
     {
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
-                .permitAll().build();
-        StrictMode.setThreadPolicy(policy);
         try {
             if(!address.startsWith("http://") && !address.startsWith("https://"))
                 address = "http://" + address;
@@ -134,7 +128,7 @@ public class RSSFeedControl extends AsyncTask<Void, Void, Boolean>
                                 if (s[ss].charAt(0) != '<' && s[ss].length() > 6 && !s[ss].contains("<img")) {
                                     String[] subs = s[ss].split("<");
                                     for (String subss : subs)
-                                        if (subss.length() > 3 && !subss.contains("a href"))
+                                        if (subss.length() > 3 && !subss.contains("a href") && !subss.contains("br clear"))
                                             desc += subss;
                                 }
                             //rssPost.setContent(current.getTextContent());

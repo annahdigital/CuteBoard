@@ -1,4 +1,4 @@
-package com.example.cuteboard;
+package com.example.cuteboard.Network;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -7,6 +7,10 @@ import android.view.Gravity;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+
+import com.example.cuteboard.Activities.MainActivity;
+import com.example.cuteboard.Network.NetworkStateReader;
+import com.example.cuteboard.R;
 
 public class NetworkStateReceiver extends BroadcastReceiver {
 

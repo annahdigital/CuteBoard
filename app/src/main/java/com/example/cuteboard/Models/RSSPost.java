@@ -1,4 +1,4 @@
-package com.example.cuteboard;
+package com.example.cuteboard.Models;
 
 public class RSSPost {
 

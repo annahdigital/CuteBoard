@@ -1,21 +1,29 @@
-package com.example.cuteboard;
+package com.example.cuteboard.Adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
-import android.util.Log;
+import android.os.StrictMode;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.io.IOException;
+import com.example.cuteboard.Activities.MainActivity;
+import com.example.cuteboard.Activities.RSSPostActivity;
+import com.example.cuteboard.Models.RSSPost;
+import com.example.cuteboard.R;
+import com.example.cuteboard.Tasks.ImageLoadTask;
+
+import java.io.BufferedInputStream;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -24,17 +32,17 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.RSSPostViewHol
     private Activity myContext;
     private ArrayList<RSSPost> posts;
 
-    static class RSSPostViewHolder extends RecyclerView.ViewHolder{
+    static public class RSSPostViewHolder extends RecyclerView.ViewHolder{
         TextView postTitleView;
         TextView postDateView;
-        ImageView postImageView;
+        public ImageView postImageView;
         TextView postContentView;
         String postURL;
         Bitmap bitmapImage;
 
-        private View rssFeedView;
+        View rssFeedView;
 
-        public RSSPostViewHolder(View v) {
+        RSSPostViewHolder(View v) {
             super(v);
             rssFeedView = v;
             postDateView = v.findViewById(R.id.postDateLabel);
@@ -57,13 +65,24 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.RSSPostViewHol
     }
 
     @Override
-    public void onBindViewHolder(RSSPostViewHolder holder, int position) {
+    public void onBindViewHolder(final RSSPostViewHolder holder, int position) {
         final RSSPost rssFeedModel = posts.get(position);
         holder.postTitleView.setText(rssFeedModel.getTitle());
         holder.postDateView.setText(rssFeedModel.getDate());
         holder.postContentView.setText(rssFeedModel.getContent());
-        holder.postImageView.setImageResource(R.mipmap.kitty);
-        // + ADD IMAGE
+        //holder.postImageView.setImageResource(R.mipmap.kitty);
+
+        new ImageLoadTask(rssFeedModel.getImage(), holder, myContext).execute();
+
+        holder.rssFeedView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(myContext, RSSPostActivity.class);
+                i.putExtra("link", rssFeedModel.getLink());
+                i.putExtra("position", posts.indexOf(rssFeedModel));
+                myContext.startActivity(i);
+            }
+        });
     }
 
     @Override

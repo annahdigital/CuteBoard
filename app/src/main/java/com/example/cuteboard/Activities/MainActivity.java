@@ -1,4 +1,4 @@
-package com.example.cuteboard;
+package com.example.cuteboard.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -24,6 +24,10 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.example.cuteboard.Network.NetworkStateReader;
+import com.example.cuteboard.Network.NetworkStateReceiver;
+import com.example.cuteboard.R;
+import com.example.cuteboard.Tasks.RSSFeedControl;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.Random;
@@ -37,7 +41,9 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences sharedPref;
     private BroadcastReceiver mNetworkReceiver;
     private String[] links = new String[] { "https://www.rt.com/rss/",
-                                            "https://tech.onliner.by/feed"};
+                                            "https://tech.onliner.by/feed",
+                                            "https://people.onliner.by/feed",
+                                            "https://news.tut.by/rss/index.rss"};
 
     private String RSS;
     public static final String APP_RSS = "RSS";
@@ -74,23 +80,13 @@ public class MainActivity extends AppCompatActivity {
         mSwipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                //new FetchFeedTask().execute((Void) null);
                 loadPosts();
             }
         });
 
         // getting url of the rss feed
         sharedPref = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-        if (!sharedPref.contains(APP_RSS)) {
-            showPopUp();
-        }
-        else
-        {
-            RSS = sharedPref.getString(APP_RSS, "");
-            loadPosts();
-            //rssFeedControl.tryConnection(RSS);
-            //getRssData();
-        }
+        loadPosts();
     }
 
 
@@ -111,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
                LayoutParams.WRAP_CONTENT,
                true
        );
+
        // showing button at the background
        mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
            @Override
@@ -175,6 +172,7 @@ public class MainActivity extends AppCompatActivity {
        if (NetworkStateReader.getConnectivityStatusString(this).equals(getResources().getString(R.string.no_internet)))
        {
             mSwipeLayout.setRefreshing(false);
+            networkStateChanged(NetworkStateReader.getConnectivityStatusString(this));
        }
        else {
            if (!sharedPref.contains(APP_RSS)) {
@@ -183,8 +181,6 @@ public class MainActivity extends AppCompatActivity {
            else
            {
                RSS = sharedPref.getString(APP_RSS, "");
-               //rssFeedControl.tryConnection(RSS);
-               //getRssData();
                new RSSFeedControl(this, RSS, mSwipeLayout, mRecyclerView).execute();
            }
        }

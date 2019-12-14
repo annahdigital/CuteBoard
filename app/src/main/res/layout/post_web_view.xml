@@ -4,14 +4,14 @@
     android:layout_height="match_parent">
 
     <WebView
-        android:id="@+id/post_veb_view"
+        android:id="@+id/post_veb_view_holder"
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
     </WebView>
 
 
     <androidx.core.widget.ContentLoadingProgressBar
-        android:id="@+id/progressBar"
+        android:id="@+id/postProgressBar"
         android:theme="@style/ContentLoadingProgress"
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
