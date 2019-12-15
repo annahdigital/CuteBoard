@@ -5,6 +5,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.BroadcastReceiver;
@@ -21,12 +22,17 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.cuteboard.DatabaseWork.RSSDatabase;
+import com.example.cuteboard.DatabaseWork.RSSDatabaseBuilder;
 import com.example.cuteboard.Network.NetworkStateReader;
 import com.example.cuteboard.Network.NetworkStateReceiver;
 import com.example.cuteboard.R;
+import com.example.cuteboard.Tasks.CacheLoadingTask;
 import com.example.cuteboard.Tasks.RSSFeedControl;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -34,6 +40,7 @@ import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
+    private RSSDatabase db;
     private RecyclerView mRecyclerView;
     private SwipeRefreshLayout mSwipeLayout;
     private PopupWindow mPopupWindow;
@@ -53,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        db = RSSDatabaseBuilder.getInstance(this);
         // setting toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -134,9 +141,7 @@ public class MainActivity extends AppCompatActivity {
                    SharedPreferences.Editor editor = sharedPref.edit();
                    editor.putString(APP_RSS, urlEdit.getText().toString());
                    editor.apply();
-
                    RSS = sharedPref.getString(APP_RSS, "");
-                   //getRssData();
                    loadPosts();
                }
            }
@@ -172,7 +177,8 @@ public class MainActivity extends AppCompatActivity {
        if (NetworkStateReader.getConnectivityStatusString(this).equals(getResources().getString(R.string.no_internet)))
        {
             mSwipeLayout.setRefreshing(false);
-            networkStateChanged(NetworkStateReader.getConnectivityStatusString(this));
+            showError();
+            new CacheLoadingTask(db, this, mRecyclerView, mSwipeLayout).execute();
        }
        else {
            if (!sharedPref.contains(APP_RSS)) {
@@ -181,10 +187,23 @@ public class MainActivity extends AppCompatActivity {
            else
            {
                RSS = sharedPref.getString(APP_RSS, "");
-               new RSSFeedControl(this, RSS, mSwipeLayout, mRecyclerView).execute();
+               new RSSFeedControl(this, RSS, mSwipeLayout, mRecyclerView, db).execute();
            }
        }
    }
+
+    private void showError() {
+        String message = "No internet connection, but there is some cached posts!";
+        Toast toast = Toast.makeText(this,
+                message,
+                Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        LinearLayout toastContainer = (LinearLayout) toast.getView();
+        ImageView catImageView = new ImageView(this);
+        catImageView.setImageResource(R.drawable.kitty_wow);
+        toastContainer.addView(catImageView, 0);
+        toast.show();
+    }
 
 
 }

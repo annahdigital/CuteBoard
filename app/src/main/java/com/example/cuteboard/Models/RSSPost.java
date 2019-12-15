@@ -1,11 +1,19 @@
 package com.example.cuteboard.Models;
 
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+@Entity
 public class RSSPost {
 
     private String Title;
     private String Content;
     private String Date;
     private String Image;
+    private String CachedImage;
+    @NonNull
+    @PrimaryKey
     private String Link;
 
 
@@ -36,6 +44,10 @@ public class RSSPost {
     public String getImage() { return this.Image; }
 
     public void setImage(String image) { this.Image = image; }
+
+    public void setCachedImage(String image) { this.CachedImage = image; }
+
+    public String getCachedImage() { return this.CachedImage; }
 
     public String getLink() { return this.Link; }
 

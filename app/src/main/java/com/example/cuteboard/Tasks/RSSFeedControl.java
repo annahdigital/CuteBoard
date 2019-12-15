@@ -1,8 +1,11 @@
 package com.example.cuteboard.Tasks;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.StrictMode;
+import android.util.Base64;
 import android.view.Gravity;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -12,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.cuteboard.Adapters.PostAdapter;
+import com.example.cuteboard.DatabaseWork.RSSDatabase;
 import com.example.cuteboard.Models.RSSPost;
 import com.example.cuteboard.R;
 
@@ -20,6 +24,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -39,13 +44,16 @@ public class RSSFeedControl extends AsyncTask<Void, Void, Boolean>
     private SwipeRefreshLayout mSwipeLayout;
     private ArrayList<RSSPost> loaded_posts;
     private RecyclerView mRecyclerView;
+    private RSSDatabase db;
 
-    public RSSFeedControl(Context mcontext, String address, SwipeRefreshLayout swipeRefreshLayout, RecyclerView recyclerView)
+    public RSSFeedControl(Context mcontext, String address, SwipeRefreshLayout swipeRefreshLayout, RecyclerView recyclerView,
+                          RSSDatabase db)
     {
         this.context = mcontext;
         this.address = address;
         this.mSwipeLayout = swipeRefreshLayout;
         this.mRecyclerView = recyclerView;
+        this.db = db;
     }
 
     @Override
@@ -56,10 +64,6 @@ public class RSSFeedControl extends AsyncTask<Void, Void, Boolean>
 
     @Override
     protected Boolean doInBackground(Void...voids) {
-        /*if (online)
-            return ProcessXml(GetData(params[0]));
-        else
-            return GetCache();*/
         try {
             ProcessXml(tryConnection(address));
             return true;
@@ -157,6 +161,27 @@ public class RSSFeedControl extends AsyncTask<Void, Void, Boolean>
                     }
                     posts.add(rssPost);
                 }
+            }
+            db.getRSSPostDao().deleteAll();
+            int count = 10;
+            if (posts.size() < count) count = posts.size();
+            for (int k = 0; k < count; k++) {
+                RSSPost post = posts.get(k);
+                String img= post.getImage();
+                try {
+                    URL url = new URL(img);
+                    Bitmap bitmap = BitmapFactory.decodeStream(url.openStream());
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 60, baos);
+                    byte[] b = baos.toByteArray();
+                    String encodedImage = Base64.encodeToString(b, Base64.DEFAULT);
+                    post.setCachedImage(encodedImage);
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+                db.getRSSPostDao().insert(post);
             }
         }
         loaded_posts = posts;

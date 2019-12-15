@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.cuteboard.Activities.MainActivity;
 import com.example.cuteboard.Activities.RSSPostActivity;
 import com.example.cuteboard.Models.RSSPost;
+import com.example.cuteboard.Network.NetworkStateReader;
 import com.example.cuteboard.R;
 import com.example.cuteboard.Tasks.ImageLoadTask;
 
@@ -72,7 +73,10 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.RSSPostViewHol
         holder.postContentView.setText(rssFeedModel.getContent());
         //holder.postImageView.setImageResource(R.mipmap.kitty);
 
-        new ImageLoadTask(rssFeedModel.getImage(), holder, myContext).execute();
+        if (NetworkStateReader.getConnectivityStatusString(myContext).equals(myContext.getResources().getString(R.string.no_internet)))
+            new ImageLoadTask(rssFeedModel.getCachedImage(), true, holder, myContext).execute();
+        else
+            new ImageLoadTask(rssFeedModel.getImage(), false, holder, myContext).execute();
 
         holder.rssFeedView.setOnClickListener(new View.OnClickListener() {
             @Override
