@@ -5,7 +5,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.room.Room;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.BroadcastReceiver;
@@ -36,6 +35,7 @@ import com.example.cuteboard.Tasks.CacheLoadingTask;
 import com.example.cuteboard.Tasks.RSSFeedControl;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.Objects;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
@@ -44,17 +44,15 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private SwipeRefreshLayout mSwipeLayout;
     private PopupWindow mPopupWindow;
-    private Context mContext;
     private SharedPreferences sharedPref;
-    private BroadcastReceiver mNetworkReceiver;
-    private String[] links = new String[] { "https://www.rt.com/rss/",
+    private final String[] links = new String[] { "https://www.rt.com/rss/",
                                             "https://tech.onliner.by/feed",
                                             "https://people.onliner.by/feed",
                                             "https://news.tut.by/rss/index.rss"};
 
     private String RSS;
-    public static final String APP_RSS = "RSS";
-    public static final String APP_PREFERENCES = "preferences";
+    private static final String APP_RSS = "RSS";
+    private static final String APP_PREFERENCES = "preferences";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,10 +62,10 @@ public class MainActivity extends AppCompatActivity {
         // setting toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("");
+        Objects.requireNonNull(getSupportActionBar()).setTitle("");
 
         // registering network receiver to track network state
-        mNetworkReceiver = new NetworkStateReceiver();
+        BroadcastReceiver mNetworkReceiver = new NetworkStateReceiver();
         registerReceiver(mNetworkReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
 
 
@@ -103,11 +101,11 @@ public class MainActivity extends AppCompatActivity {
        // hide button at the background
        final FloatingActionButton settingsButton = this.findViewById(R.id.settings_rss);
        settingsButton.setVisibility(View.GONE);
-       mRecyclerView.setVisibility(View.GONE);
-       mContext = getApplicationContext();
+       mRecyclerView.setAlpha(0);
+       Context mContext = getApplicationContext();
        // popup window for entering rss
        LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(LAYOUT_INFLATER_SERVICE);
-       View customView = inflater.inflate(R.layout.start_page, null);
+       View customView = Objects.requireNonNull(inflater).inflate(R.layout.start_page, null);
        mPopupWindow = new PopupWindow(
                customView,
                LayoutParams.WRAP_CONTENT,
@@ -120,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
            @Override
            public void onDismiss() {
                settingsButton.setVisibility(View.VISIBLE);
-               mRecyclerView.setVisibility(View.VISIBLE);
+               mRecyclerView.setAlpha(1);
            }
        });
        mPopupWindow.setElevation(5.0f);
@@ -172,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
            }
    }
 
-   public void loadPosts()
+   private void loadPosts()
    {
        if (NetworkStateReader.getConnectivityStatusString(this).equals(getResources().getString(R.string.no_internet)))
        {

@@ -3,45 +3,35 @@ package com.example.cuteboard.Adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.StrictMode;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.cuteboard.Activities.MainActivity;
 import com.example.cuteboard.Activities.RSSPostActivity;
 import com.example.cuteboard.Models.RSSPost;
 import com.example.cuteboard.Network.NetworkStateReader;
 import com.example.cuteboard.R;
 import com.example.cuteboard.Tasks.ImageLoadTask;
 
-import java.io.BufferedInputStream;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.RSSPostViewHolder> {
 
-    private Activity myContext;
-    private ArrayList<RSSPost> posts;
+    private final Activity myContext;
+    private final ArrayList<RSSPost> posts;
 
     static public class RSSPostViewHolder extends RecyclerView.ViewHolder{
-        TextView postTitleView;
-        TextView postDateView;
-        public ImageView postImageView;
-        TextView postContentView;
-        String postURL;
-        Bitmap bitmapImage;
+        final TextView postTitleView;
+        final TextView postDateView;
+        public final ImageView postImageView;
+        final TextView postContentView;
 
-        View rssFeedView;
+        final View rssFeedView;
 
         RSSPostViewHolder(View v) {
             super(v);
@@ -58,6 +48,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.RSSPostViewHol
         posts = postList;
     }
 
+    @NonNull
     @Override
     public RSSPostViewHolder onCreateViewHolder(ViewGroup parent, int type) {
         View v = LayoutInflater.from(parent.getContext())
@@ -74,9 +65,9 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.RSSPostViewHol
         //holder.postImageView.setImageResource(R.mipmap.kitty);
 
         if (NetworkStateReader.getConnectivityStatusString(myContext).equals(myContext.getResources().getString(R.string.no_internet)))
-            new ImageLoadTask(rssFeedModel.getCachedImage(), true, holder, myContext).execute();
+            new ImageLoadTask(rssFeedModel.getCachedImage(), true, holder).execute();
         else
-            new ImageLoadTask(rssFeedModel.getImage(), false, holder, myContext).execute();
+            new ImageLoadTask(rssFeedModel.getImage(), false, holder).execute();
 
         holder.rssFeedView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,6 +78,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.RSSPostViewHol
                 myContext.startActivity(i);
             }
         });
+
     }
 
     @Override

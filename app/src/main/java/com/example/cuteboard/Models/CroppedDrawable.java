@@ -7,7 +7,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 
 public class CroppedDrawable extends BitmapDrawable {
-    private Path p = new Path();
+    private final Path p = new Path();
 
     public CroppedDrawable(Bitmap b) {
         super(b);

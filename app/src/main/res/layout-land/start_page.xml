@@ -8,8 +8,8 @@
 
     <ImageView
         android:id="@+id/catImage"
-        android:layout_width="130dp"
-        android:layout_height="140dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_below="@id/welcome"
         android:layout_alignParentStart="false"
         android:layout_alignParentEnd="false"
@@ -30,7 +30,7 @@
         android:text="@string/welcome"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="@color/colorPrimaryDarkest"
-        android:textSize="24sp"
+        android:textSize="18sp"
         android:textStyle="bold" />
 
     <TextView
@@ -44,7 +44,8 @@
         android:gravity="center_horizontal"
         android:text="@string/rss_default"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@color/colorPrimaryDarkest" />
+        android:textColor="@color/colorPrimaryDarkest"
+        android:textSize="16sp" />
 
     <EditText
         android:id="@+id/input_rss"
@@ -68,7 +69,8 @@
         android:layout_below="@id/input_rss"
         android:layout_centerInParent="true"
         android:padding="15dp"
-        android:text="@string/start" />
+        android:text="@string/start"
+        android:textSize="10sp" />
 
     <Button
         android:id="@+id/random_link"
@@ -76,7 +78,6 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_below="@id/input_rss"
-        android:layout_toEndOf="@id/rss_url"
         android:text="@string/random_link" />
 
 

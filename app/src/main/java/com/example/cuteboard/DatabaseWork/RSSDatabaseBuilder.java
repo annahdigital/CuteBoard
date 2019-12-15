@@ -7,7 +7,7 @@ import androidx.room.Room;
 public class RSSDatabaseBuilder {
 
     private static RSSDatabaseBuilder instance = null;
-    private RSSDatabase db;
+    private final RSSDatabase db;
 
     private RSSDatabaseBuilder(Context context)
     {

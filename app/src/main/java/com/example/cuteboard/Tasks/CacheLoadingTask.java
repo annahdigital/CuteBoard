@@ -19,11 +19,11 @@ import java.util.ArrayList;
 
 public class CacheLoadingTask  extends AsyncTask<Void, Void, Boolean> {
 
-    private RSSDatabase db;
-    private SwipeRefreshLayout mSwipeLayout;
+    private final RSSDatabase db;
+    private final SwipeRefreshLayout mSwipeLayout;
     private ArrayList<RSSPost> loaded_posts;
-    private RecyclerView mRecyclerView;
-    private Activity context;
+    private final RecyclerView mRecyclerView;
+    private final Activity context;
 
     public CacheLoadingTask(RSSDatabase db, Activity context, RecyclerView recyclerView, SwipeRefreshLayout mSwipeLayout)
     {
@@ -43,9 +43,7 @@ public class CacheLoadingTask  extends AsyncTask<Void, Void, Boolean> {
         try {
             loaded_posts = new ArrayList<>();
             loaded_posts.addAll(db.getRSSPostDao().getAll());
-            if (loaded_posts.size() > 0)
-                return true;
-            else return false;
+            return loaded_posts.size() > 0;
         }
         catch (Exception e)
         {

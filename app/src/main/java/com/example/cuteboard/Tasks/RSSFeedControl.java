@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.os.StrictMode;
 import android.util.Base64;
 import android.view.Gravity;
 import android.widget.ImageView;
@@ -31,6 +30,7 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Objects;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -38,13 +38,12 @@ import javax.xml.parsers.DocumentBuilderFactory;
 public class RSSFeedControl extends AsyncTask<Void, Void, Boolean>
 {
 
-    private HttpURLConnection connection;
-    private Context context;
-    private String address;
-    private SwipeRefreshLayout mSwipeLayout;
+    private final Context context;
+    private final String address;
+    private final SwipeRefreshLayout mSwipeLayout;
     private ArrayList<RSSPost> loaded_posts;
-    private RecyclerView mRecyclerView;
-    private RSSDatabase db;
+    private final RecyclerView mRecyclerView;
+    private final RSSDatabase db;
 
     public RSSFeedControl(Context mcontext, String address, SwipeRefreshLayout swipeRefreshLayout, RecyclerView recyclerView,
                           RSSDatabase db)
@@ -92,7 +91,7 @@ public class RSSFeedControl extends AsyncTask<Void, Void, Boolean>
             if(!address.startsWith("http://") && !address.startsWith("https://"))
                 address = "http://" + address;
             URL url = new URL(address);
-            connection = (HttpURLConnection) url.openConnection();
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
             InputStream inputStream = connection.getInputStream();
             DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
@@ -127,23 +126,23 @@ public class RSSFeedControl extends AsyncTask<Void, Void, Boolean>
                         }
                         else if (current.getNodeName().equalsIgnoreCase("description")) {
                             String[] s = current.getTextContent().split(">");
-                            String desc = "";
-                            for (int ss = 0; ss < s.length; ss++)
-                                if (s[ss].charAt(0) != '<' && s[ss].length() > 6 && !s[ss].contains("<img")) {
-                                    String[] subs = s[ss].split("<");
+                            StringBuilder desc = new StringBuilder();
+                            for (String value : s)
+                                if (value.charAt(0) != '<' && value.length() > 6 && !value.contains("<img")) {
+                                    String[] subs = value.split("<");
                                     for (String subss : subs)
                                         if (subss.length() > 3 && !subss.contains("a href") && !subss.contains("br clear"))
-                                            desc += subss;
+                                            desc.append(subss);
                                 }
                             //rssPost.setContent(current.getTextContent());
-                            rssPost.setContent(desc);
+                            rssPost.setContent(desc.toString());
                         }
                         else if (current.getNodeName().equalsIgnoreCase("pubDate")) {
                             try {
                                 SimpleDateFormat dt = new SimpleDateFormat("dd MMM yyyy, HH:mm");
                                 SimpleDateFormat dt1 = new SimpleDateFormat("E, d MMM yyyy HH:mm:ss Z");
                                 Date date = dt1.parse(current.getTextContent());
-                                rssPost.setDate(dt.format(date));
+                                rssPost.setDate(dt.format(Objects.requireNonNull(date)));
                             }
                             catch (java.text.ParseException e)
                             {
