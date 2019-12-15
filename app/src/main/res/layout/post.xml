@@ -23,6 +23,7 @@
             android:layout_marginEnd="5dp"
             android:layout_marginBottom="15dp"
             android:contentDescription="@string/post_img"
+            android:foreground="@drawable/rounded_fg"
             android:scaleType="centerCrop" />
 
         <TextView

@@ -6,7 +6,6 @@ import android.os.AsyncTask;
 import android.util.Base64;
 
 import com.example.cuteboard.Adapters.PostAdapter;
-import com.example.cuteboard.Models.CroppedDrawable;
 import com.example.cuteboard.R;
 
 import java.net.URL;
@@ -56,11 +55,7 @@ public class ImageLoadTask extends AsyncTask<Void, Void, Bitmap> {
     protected void onPostExecute(Bitmap bitmap)
     {
         if (bitmap != null) {
-            //RoundedBitmapDrawable dr = RoundedBitmapDrawableFactory.create(context.getResources(), bitmap);
-            //dr.setCircular(true);
-            CroppedDrawable cd = new CroppedDrawable(bitmap);
-            holder.postImageView.setImageDrawable(cd);
-            //holder.postImageView.setImageDrawable(dr);
+            holder.postImageView.setImageBitmap(bitmap);
         }
         else
             holder.postImageView.setImageResource(R.mipmap.kitty);

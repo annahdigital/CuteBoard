@@ -10,7 +10,6 @@
     <include
         layout="@layout/toolbar" />
 
-
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/settings_rss"
         android:layout_width="wrap_content"
@@ -33,6 +32,7 @@
             android:id="@+id/post_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

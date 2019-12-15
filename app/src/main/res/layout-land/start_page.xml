@@ -70,7 +70,7 @@
         android:layout_centerInParent="true"
         android:padding="15dp"
         android:text="@string/start"
-        android:textSize="10sp" />
+        android:textSize="12sp" />
 
     <Button
         android:id="@+id/random_link"
@@ -78,7 +78,7 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_below="@id/input_rss"
-        android:text="@string/random_link" />
+        android:text="@string/random_link"/>
 
 
 </RelativeLayout>

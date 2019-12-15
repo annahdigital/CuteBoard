@@ -63,6 +63,13 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setTitle("");
+        TextView toolbarURL= this.findViewById(R.id.current_url);
+        toolbarURL.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showPopUp();
+            }
+        });
 
         // registering network receiver to track network state
         BroadcastReceiver mNetworkReceiver = new NetworkStateReceiver();
@@ -185,6 +192,8 @@ public class MainActivity extends AppCompatActivity {
            else
            {
                RSS = sharedPref.getString(APP_RSS, "");
+               TextView toolbarURL= this.findViewById(R.id.current_url);
+               toolbarURL.setText(RSS.replace("https://", ""));
                new RSSFeedControl(this, RSS, mSwipeLayout, mRecyclerView, db).execute();
            }
        }
