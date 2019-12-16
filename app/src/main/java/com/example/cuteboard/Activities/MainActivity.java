@@ -2,6 +2,7 @@ package com.example.cuteboard.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -45,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     private SwipeRefreshLayout mSwipeLayout;
     private PopupWindow mPopupWindow;
     private SharedPreferences sharedPref;
+    private BroadcastReceiver mNetworkReceiver;
     private final String[] links = new String[] { "https://www.rt.com/rss/",
                                             "https://tech.onliner.by/feed",
                                             "https://people.onliner.by/feed",
@@ -73,9 +75,8 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // registering network receiver to track network state
-        BroadcastReceiver mNetworkReceiver = new NetworkStateReceiver();
+        mNetworkReceiver = new NetworkStateReceiver();
         registerReceiver(mNetworkReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
-
 
         // setting up recycler view for feed
         mRecyclerView = findViewById(R.id.post_view);
@@ -100,6 +101,13 @@ public class MainActivity extends AppCompatActivity {
         // getting url of the rss feed
         sharedPref = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         loadPosts();
+    }
+
+    @Override
+    public void onDestroy()
+    {
+        super.onDestroy();
+        this.unregisterReceiver(mNetworkReceiver);
     }
 
 
