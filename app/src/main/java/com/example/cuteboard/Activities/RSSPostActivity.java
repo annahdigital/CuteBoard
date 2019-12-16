@@ -5,11 +5,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
+import com.example.cuteboard.Network.NetworkStateReader;
 import com.example.cuteboard.R;
+
+import java.io.File;
 
 public class RSSPostActivity extends AppCompatActivity {
 
@@ -45,8 +49,14 @@ public class RSSPostActivity extends AppCompatActivity {
             }
         });
         webView.getSettings().setLoadsImagesAutomatically(true);
+        webView.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
         webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
-        webView.loadUrl(link);
+        if (NetworkStateReader.getConnectivityStatusString(this).equals(this.getResources().getString(R.string.no_internet)))
+        {
+            webView.loadUrl("file://" + getFilesDir().getAbsolutePath() + File.separator + postIndex + ".mht");
+        }
+        else
+            webView.loadUrl(link);
 
     }
 }
