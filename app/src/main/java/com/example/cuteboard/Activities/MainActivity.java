@@ -74,10 +74,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // registering network receiver to track network state
-        mNetworkReceiver = new NetworkStateReceiver();
-        registerReceiver(mNetworkReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
-
         // setting up recycler view for feed
         mRecyclerView = findViewById(R.id.post_view);
         mSwipeLayout = findViewById(R.id.swipeRefreshLayout);
@@ -104,10 +100,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onDestroy()
+    public void onPause()
     {
-        super.onDestroy();
+        super.onPause();
         this.unregisterReceiver(mNetworkReceiver);
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        // registering network receiver to track network state
+        mNetworkReceiver = new NetworkStateReceiver();
+        this.registerReceiver(mNetworkReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
     }
 
 
