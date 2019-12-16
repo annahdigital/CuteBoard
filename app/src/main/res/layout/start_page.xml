@@ -56,7 +56,8 @@
         android:hint="@string/rss_default"
         android:inputType="textUri"
         android:shadowColor="@color/colorPrimaryDark"
-        android:textColor="@color/colorPrimaryDarkest">
+        android:textColor="@color/colorPrimaryDarkest"
+        android:importantForAutofill="no">
 
     </EditText>
 

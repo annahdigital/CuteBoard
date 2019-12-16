@@ -21,14 +21,22 @@ public class NetworkStateReceiver extends BroadcastReceiver {
         if (context.getClass().equals(MainActivity.class))
             ((MainActivity) context).networkStateChanged(status);
 
-        Toast toast = Toast.makeText(context,
-                status,
-                Toast.LENGTH_LONG);
-        toast.setGravity(Gravity.CENTER, 0, 0);
-        LinearLayout toastContainer = (LinearLayout) toast.getView();
-        ImageView catImageView = new ImageView(context);
-        catImageView.setImageResource(R.drawable.kitty_wow);
-        toastContainer.addView(catImageView, 0);
-        toast.show();
+        if (status.equals(context.getResources().getString(R.string.no_internet))) {
+            Toast toast = Toast.makeText(context,
+                    status,
+                    Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.CENTER, 0, 0);
+            LinearLayout toastContainer = (LinearLayout) toast.getView();
+            ImageView catImageView = new ImageView(context);
+            catImageView.setImageResource(R.drawable.kitty_wow);
+            toastContainer.addView(catImageView, 0);
+            toast.show();
+        }
+        else {
+            Toast toast = Toast.makeText(context,
+                    status,
+                    Toast.LENGTH_SHORT);
+            toast.show();
+        }
     }
 }

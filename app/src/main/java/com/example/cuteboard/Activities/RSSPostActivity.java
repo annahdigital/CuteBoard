@@ -32,10 +32,12 @@ public class RSSPostActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.post_web_view);
         mNetworkReceiver = new NetworkStateReceiver();
+
         link = getIntent().getStringExtra("link");
         postIndex = getIntent().getIntExtra("position", 0);
         webView = findViewById(R.id.post_veb_view_holder);
         progressBar = findViewById(R.id.postProgressBar);
+
         openURL();
     }
 

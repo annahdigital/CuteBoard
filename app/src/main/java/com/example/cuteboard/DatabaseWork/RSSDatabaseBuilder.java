@@ -11,6 +11,7 @@ public class RSSDatabaseBuilder {
 
     private RSSDatabaseBuilder(Context context)
     {
+        // getting db instance
         db = Room.databaseBuilder(context, RSSDatabase.class, "rss_db").build();
     }
 
