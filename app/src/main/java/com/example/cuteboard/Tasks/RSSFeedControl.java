@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Base64;
+import android.util.Log;
 import android.view.Gravity;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -38,7 +39,7 @@ import java.util.Objects;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-public class RSSFeedControl extends AsyncTask<Void, Void, Boolean>
+public class RSSFeedControl extends AsyncTask<Void, Integer, Boolean>
 {
 
     private final Context context;
@@ -46,7 +47,7 @@ public class RSSFeedControl extends AsyncTask<Void, Void, Boolean>
     private final SwipeRefreshLayout mSwipeLayout;
     private ArrayList<RSSPost> loaded_posts;
     private final RecyclerView mRecyclerView;
-    private ArrayList<WebView> webViews;
+    private ArrayList<WebView> webViews = new ArrayList<>();
     private final RSSDatabase db;
 
     public RSSFeedControl(Context mcontext, String address, SwipeRefreshLayout swipeRefreshLayout, RecyclerView recyclerView,
@@ -57,12 +58,31 @@ public class RSSFeedControl extends AsyncTask<Void, Void, Boolean>
         this.mSwipeLayout = swipeRefreshLayout;
         this.mRecyclerView = recyclerView;
         this.db = db;
-        this.webViews = new ArrayList<>();
     }
 
     @Override
     protected void onPreExecute() {
         mSwipeLayout.setRefreshing(true);
+    }
+
+    @Override
+    protected void onProgressUpdate(Integer...integers)
+    {
+        super.onProgressUpdate(integers);
+        final int i = integers[0];
+        WebView view = new WebView(context);
+        view.setWebViewClient(new WebViewClient()
+        {
+            @Override
+            public void onPageFinished(WebView view, String url)
+            {
+                view.saveWebArchive(context.getFilesDir().getAbsolutePath() + File.separator + i + ".mht");
+            }
+        });
+        view.loadUrl(loaded_posts.get(i).getLink());
+        webViews.add(view);
+        if (i == 9)
+            showMessage();
     }
 
 
@@ -85,26 +105,6 @@ public class RSSFeedControl extends AsyncTask<Void, Void, Boolean>
         if (success)
         {
             mRecyclerView.setAdapter(new PostAdapter(context, loaded_posts));
-            int cachePosts = 10;
-            if (loaded_posts.size() < cachePosts) cachePosts = loaded_posts.size();
-            final int cacheNum = cachePosts;
-            for (int i = 0; i < cachePosts; i++)
-            {
-                webViews.add(new WebView(context));
-                webViews.get(i).setWebViewClient(new WebViewClient()
-                {
-                    @Override
-                    public void onPageFinished(WebView view, String url)
-                    {
-                        view.saveWebArchive(context.getFilesDir().getAbsolutePath() + File.separator + webViews.indexOf(view) + ".mht");
-                        if (webViews.indexOf(view) == cacheNum - 1)
-                            showMessage();
-                    }
-                });
-            }
-            for (int i = 0; i < cachePosts; i++) {
-                webViews.get(i).loadUrl(loaded_posts.get(i).getLink());
-            }
         }
         else showError(address);
 
@@ -185,6 +185,7 @@ public class RSSFeedControl extends AsyncTask<Void, Void, Boolean>
                     posts.add(rssPost);
                 }
             }
+            loaded_posts = posts;
             db.getRSSPostDao().deleteAll();
             int count = 10;
             if (posts.size() < count) count = posts.size();
@@ -205,9 +206,9 @@ public class RSSFeedControl extends AsyncTask<Void, Void, Boolean>
                     e.printStackTrace();
                 }
                 db.getRSSPostDao().insert(post);
+                publishProgress(posts.indexOf(post));
             }
         }
-        loaded_posts = posts;
     }
 
     private void showError(String address) {
