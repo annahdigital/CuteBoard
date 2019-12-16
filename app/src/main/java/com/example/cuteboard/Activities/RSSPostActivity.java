@@ -31,6 +31,7 @@ public class RSSPostActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.post_web_view);
+        mNetworkReceiver = new NetworkStateReceiver();
         link = getIntent().getStringExtra("link");
         postIndex = getIntent().getIntExtra("position", 0);
         webView = findViewById(R.id.post_veb_view_holder);
@@ -49,7 +50,6 @@ public class RSSPostActivity extends AppCompatActivity {
     public void onResume()
     {
         super.onResume();
-        mNetworkReceiver = new NetworkStateReceiver();
         this.registerReceiver(mNetworkReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
     }
 

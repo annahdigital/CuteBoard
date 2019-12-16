@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         db = RSSDatabaseBuilder.getInstance(this);
+        mNetworkReceiver = new NetworkStateReceiver();
 
         // setting toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -111,7 +112,6 @@ public class MainActivity extends AppCompatActivity {
     {
         super.onResume();
         // registering network receiver to track network state
-        mNetworkReceiver = new NetworkStateReceiver();
         this.registerReceiver(mNetworkReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
     }
 
