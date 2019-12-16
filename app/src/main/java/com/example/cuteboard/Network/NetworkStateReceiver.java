@@ -9,7 +9,6 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.cuteboard.Activities.MainActivity;
-import com.example.cuteboard.Network.NetworkStateReader;
 import com.example.cuteboard.R;
 
 public class NetworkStateReceiver extends BroadcastReceiver {
