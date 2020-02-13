@@ -17,7 +17,7 @@ public class RSSPost {
     private String Link;
 
 
-    public RSSPost(String title, String content, String date, String image, String link)
+    public RSSPost(String title, String content, String date, String image, @NonNull String link)
     {
         this.Title = title;
         this.Content = content;
@@ -49,8 +49,9 @@ public class RSSPost {
 
     public String getCachedImage() { return this.CachedImage; }
 
+    @NonNull
     public String getLink() { return this.Link; }
 
-    public void setLink(String link) { this.Link = link; }
+    public void setLink(@NonNull String link) { this.Link = link; }
 
 }

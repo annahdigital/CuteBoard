@@ -3,6 +3,10 @@ package com.example.cuteboard.Adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +20,8 @@ import com.example.cuteboard.Activities.RSSPostActivity;
 import com.example.cuteboard.Models.RSSPost;
 import com.example.cuteboard.Network.NetworkStateReader;
 import com.example.cuteboard.R;
-import com.example.cuteboard.Tasks.ImageLoadTask;
 
+import java.net.URL;
 import java.util.ArrayList;
 
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.RSSPostViewHolder> {
@@ -25,10 +29,10 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.RSSPostViewHol
     private final Activity myContext;
     private final ArrayList<RSSPost> posts;
 
-    static public class RSSPostViewHolder extends RecyclerView.ViewHolder{
+    static class RSSPostViewHolder extends RecyclerView.ViewHolder{
         final TextView postTitleView;
         final TextView postDateView;
-        public final ImageView postImageView;
+        final ImageView postImageView;
         final TextView postContentView;
 
         final View rssFeedView;
@@ -84,5 +88,57 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.RSSPostViewHol
     @Override
     public int getItemCount() {
         return posts.size();
+    }
+
+
+    private static class ImageLoadTask extends AsyncTask<Void, Void, Bitmap> {
+
+        private final String link;
+        private final Boolean cached;
+        private final PostAdapter.RSSPostViewHolder holder;
+
+        ImageLoadTask(String url, Boolean cached, PostAdapter.RSSPostViewHolder holder)
+        {
+            this.link = url;
+            this.holder = holder;
+            this.cached = cached;
+        }
+
+        @Override
+        protected Bitmap doInBackground(Void...voids)
+        {
+            if (!cached) {
+                try {
+                    URL url = new URL(link);
+                    return BitmapFactory.decodeStream(url.openStream());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            }
+            else {
+                if (link != null) {
+                    try {
+                        byte[] b = Base64.decode(link, Base64.DEFAULT);
+                        return BitmapFactory.decodeByteArray(b, 0, b.length);
+                    }
+                    catch (Exception e) {
+                        e.printStackTrace();
+                        return null;
+                    }
+                }
+                else return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap)
+        {
+            if (bitmap != null) {
+                holder.postImageView.setImageBitmap(bitmap);
+            }
+            else
+                holder.postImageView.setImageResource(R.mipmap.kitty);
+        }
     }
 }
